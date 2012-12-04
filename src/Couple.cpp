@@ -6,13 +6,13 @@ Couple::Couple(const int &id, const int &deg)
 	_deg = deg;
 }
 
-int Couple::id()
+int Couple::id() const
 {
 	return _id;
 }
 
-int Couple::deg()
-}
+int Couple::deg() const
+{
 	return _deg;
 }
 
@@ -31,7 +31,7 @@ void Couple::add()
 	++_deg;
 }
 
-Couple operator < (const &Couple c)
+bool Couple::operator < (const Couple &c) const
 {
 	return _deg < c.deg();
 }

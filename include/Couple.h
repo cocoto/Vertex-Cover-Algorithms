@@ -8,16 +8,16 @@ class Couple
 		int _deg;
 		
 	public :
-		Couple(const int &, const int &);
+		Couple(const int&, const int&);
 		
-		int id() const;
+		int id()  const;
 		int deg() const;
 		
 		void min();
 		void min(const int&);
 		void add();
 		
-		Couple operator < (const Couple &);
+		bool operator < (const Couple&) const;
 };
 
 #endif

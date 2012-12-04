@@ -1,43 +1,55 @@
 #include "Graph.h"
 
-Couple Graph::graph(
+/**
+ *	Build a graph representation based on an adjacency list, and ordered on the
+ *	size of the latter.
+ *
+ *	@param int n   number of nodes
+ *	@param double  rate of edge existence
+ *	@param struct* map indexed on node id, with the list of its edges as second
+ *	               member (adjacency list)
+ *
+ *	@return double average degree of the graph's nodes
+ */
+Graph::Graph(
 	int n, double p
-	, std::map<int, std::list<int>> *&graph, std::set<Couple> *&nodes
+	, std::map<int, std::list<int> > *&graph, std::set<Couple> *&nodes
 ) {
 	int i = 0, j = 0, r = 0, m = 0;
-	double q = p * RAND_MAX, delta = 0.0;
-	Couple a, b;
-	std::vector<Couple> list;
+	double q = p * RAND_MAX;
 	
-	// Initiate the Couple list
-	for (i = 1; i <= n; i++) {
-		list.push_back(new Couple(i, 0));
-	}
+	std::list<int> *la, *lb;
+  	std::map<int, std::list<int> >::iterator a, b;
+
+	srand(time(NULL));
 	
 	// Build the edges
 	for (i = 1; i <= n; i++) {
-		a = list.at(i - 1);
+		// Adjacency list of node a
+		la = &(*graph)[i];
+				
 		for(j = i + 1; j <= n; j++) {
-			a = list.at(j - 1);
+			// Adjacency list of node b
+			lb = &(*graph)[j];
+			
 			r = rand();
 			
 			if (r <= q) {
-				a.add();
-				b.add();
-				
 				++m;
+				
+				la->push_back(j);
+				lb->push_back(i);
 			}
 		}
 	}
 	
-	// Build the set of nodes
 	for (i = 1; i <= n; i++) {
-		a = list.at(i - 1);
-		nodes.insert();
-		delta += a.deg();
+		Couple c = Couple(i, graph[i].size());
+		nodes->insert(c);
 	}
 	
-	delta /= n;
+	_nodes = n;
+	_edges = m;
 	
-	return Couple(delta, m);
+	_avg = m / n;
 }

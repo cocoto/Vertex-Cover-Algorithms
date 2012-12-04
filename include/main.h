@@ -7,8 +7,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
-#include "class/Couple.h"
-#include "class/Graph.h"
+#include "Couple.h"
+#include "Graph.h"
 
 #endif
