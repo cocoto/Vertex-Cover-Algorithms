@@ -16,12 +16,13 @@ else
 	endif
 endif
 
-all : $(EXEC)
-prog: function2approx.o main.o
-	$(CC) $^ -o bin/$@ $(FLAGS)
+# all : $(EXEC)
+prog: head
+	$(CC) *.o -o bin/$@ $(FLAGS)
 
-%.o : src/%.cpp
-	$(CC)  -c $^ $(FLAGS)
+head : src/*.cpp include/*.h
+	$(CC) -c $^ $(FLAGS)
+	
 clean:
 	@ rm -f *.o
 mrproper: clean
