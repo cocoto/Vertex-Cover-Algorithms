@@ -24,20 +24,8 @@ Graph::Graph(int n, double p)
 		}
 	}
 	
-	int size = 0;
-	_max     = 0;
-	
 	// Create the priority list
-	for (i = 1; i <= n; i++) {
-		size = _edges[i].size();
-		
-		if (size > _max) {
-			_max = size;
-		}
-		
-		Couple c = Couple(i, size);
-		_nodes.insert(c);
-	}
+	rebuild();
 	
 	_nb_nodes = n;
 	_nb_edges = m;
@@ -48,6 +36,16 @@ Graph::Graph(int n, double p)
 /****************************************
 **************** Getters ****************
 ****************************************/
+
+int Graph::id() const
+{
+	return _id;
+}
+
+int Graph::max() const
+{
+	return _max;
+}
 
 double Graph::avg() const
 {
@@ -69,14 +67,9 @@ const std::map<int, std::list<int> >* Graph::edges() const
 	return &_edges;
 }
 
-std::set<Couple> Graph::nodes() const
+const std::list<int>* Graph::operator [] (const int i) const
 {
-	return _nodes;
-}
-
-std::list<int> Graph::operator [] (const int i)
-{
-	return _edges[i];
+	return &(_edges.find(i)->second);
 }
 
 /****************************************
@@ -101,12 +94,39 @@ void Graph::erase_node(const int &i)
 	
 	while (it != _edges.end()) {
 		it->second.remove(i);
+		
+		++it;
+	}
+}
+
+void Graph::rebuild()
+{
+	_id  = 0;
+	_max = 0;
+	
+	std::map<int, std::list<int> >::iterator it = _edges.begin();
+	int i = 0;
+	
+	while (it != _edges.end()) {
+		++i;
+		
+		if (it->second.size() > _max) {
+			_max = it->second.size();
+			_id  = i;
+		}
+		
+		++it;
 	}
 }
 
 bool Graph::covered()
 {
 	return _nb_edges == 0;
+}
+
+bool Graph::hollow()
+{
+	return _nd_edges < 0;
 }
 
 std::ostream& operator << (std::ostream &os, const Graph &g)
@@ -125,7 +145,7 @@ std::ostream& operator << (std::ostream &os, const Graph &g)
 			++lit;
 	
 			while (lit != mit->second.end()) {
-				os << ',' << *lit;
+				os << ", " << *lit;
 				++lit;
 			}
 		}
@@ -133,6 +153,13 @@ std::ostream& operator << (std::ostream &os, const Graph &g)
 		os << "}\n";
 		++mit;
 	}
+	
+	os  <<   "Nb. of nodes : " << g.nb_nodes()
+		<< "\tNb. of edges : " << g.nb_edges()
+		<< "\nMax. degree  : " << g.max()
+		<< "\tAvg. degree  : " << g.avg()
+		<< '\n';
+		
 	
 	return os;
 }
