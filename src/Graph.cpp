@@ -1,55 +1,138 @@
 #include "Graph.h"
 
-/**
- *	Build a graph representation based on an adjacency list, and ordered on the
- *	size of the latter.
- *
- *	@param int n   number of nodes
- *	@param double  rate of edge existence
- *	@param struct* map indexed on node id, with the list of its edges as second
- *	               member (adjacency list)
- *
- *	@return double average degree of the graph's nodes
- */
-Graph::Graph(
-	int n, double p
-	, std::map<int, std::list<int> > *&graph, std::set<Couple> *&nodes
-) {
+Graph::Graph(int n, double p)
+{
 	int i = 0, j = 0, r = 0, m = 0;
+	// Threshold for edge existency
 	double q = p * RAND_MAX;
-	
-	std::list<int> *la, *lb;
-  	std::map<int, std::list<int> >::iterator a, b;
 
 	srand(time(NULL));
 	
+	std::cout << "Existence rate : " << q / RAND_MAX * 100 << "%\n";
+	
 	// Build the edges
 	for (i = 1; i <= n; i++) {
-		// Adjacency list of node a
-		la = &(*graph)[i];
-				
 		for(j = i + 1; j <= n; j++) {
-			// Adjacency list of node b
-			lb = &(*graph)[j];
-			
 			r = rand();
 			
 			if (r <= q) {
 				++m;
 				
-				la->push_back(j);
-				lb->push_back(i);
+				_edges[i].push_back(j);
+				_edges[j].push_back(i);
 			}
 		}
 	}
 	
+	int size = 0;
+	_max     = 0;
+	
+	// Create the priority list
 	for (i = 1; i <= n; i++) {
-		Couple c = Couple(i, graph[i].size());
-		nodes->insert(c);
+		size = _edges[i].size();
+		
+		if (size > _max) {
+			_max = size;
+		}
+		
+		Couple c = Couple(i, size);
+		_nodes.insert(c);
 	}
 	
-	_nodes = n;
-	_edges = m;
+	_nb_nodes = n;
+	_nb_edges = m;
 	
-	_avg = m / n;
+	_avg = (double) m / n;
+}
+
+/****************************************
+**************** Getters ****************
+****************************************/
+
+double Graph::avg() const
+{
+	return _avg;
+}
+
+int Graph::nb_edges() const
+{
+	return _nb_edges;
+}
+
+int Graph::nb_nodes() const
+{
+	return _nb_nodes;
+}
+		
+const std::map<int, std::list<int> >* Graph::edges() const
+{
+	return &_edges;
+}
+
+std::set<Couple> Graph::nodes() const
+{
+	return _nodes;
+}
+
+std::list<int> Graph::operator [] (const int i)
+{
+	return _edges[i];
+}
+
+/****************************************
+**************** Methods ****************
+****************************************/
+
+void Graph::erase_edge(const int &i, const int &j)
+{
+	_edges[i].remove(j);
+	_edges[j].remove(i);
+	
+	--_nb_edges;
+}
+
+void Graph::erase_node(const int &i)
+{
+	// We remove as much edges as incident to designated node.
+	_nb_edges -= _edges[i].size();
+	_edges.erase(i);
+	
+	std::map<int, std::list<int> >::iterator it = _edges.begin();
+	
+	while (it != _edges.end()) {
+		it->second.remove(i);
+	}
+}
+
+bool Graph::covered()
+{
+	return _nb_edges == 0;
+}
+
+std::ostream& operator << (std::ostream &os, const Graph &g)
+{
+	std::map<int, std::list<int> >::const_iterator mit = g.edges()->begin();
+	std::list<int>::const_iterator lit;
+	
+	while (mit != g.edges()->end()) {
+		os << '[' << mit->first << "]\t: {";
+		
+		lit = mit->second.begin();
+		
+		if (mit->second.size() > 0) {
+			os << *lit;
+		
+			++lit;
+	
+			while (lit != mit->second.end()) {
+				os << ',' << *lit;
+				++lit;
+			}
+		}
+		
+		os << "}\n";
+		++mit;
+	}
+	
+	return os;
 }

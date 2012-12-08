@@ -12,4 +12,6 @@
 #include "Couple.h"
 #include "Graph.h"
 
+class Graph;
+
 #endif
