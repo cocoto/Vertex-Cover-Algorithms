@@ -21,7 +21,8 @@ prog: Graph.o src/main.cpp
 	$(CC) $^ -o bin/$@ $(FLAGS)
 
 %.o : src/%.cpp include/%.h
-	$(CC) -c $^ $(FLAGS) -o $@
+	$(CC) $< -c $(FLAGS)
+	
 clean:
 	@ rm -f *.o
 mrproper: clean
