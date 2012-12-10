@@ -66,8 +66,8 @@ class Graph
 		int       id();
 		int      max();
 		
-		int       id() const;
-		int      max() const;
+		int      cid() const;
+		int     cmax() const;
 		double   avg() const;
 		int nb_nodes() const;
 		int nb_edges() const;
