@@ -34,6 +34,7 @@
 class Graph
 {
 	private :
+		static const std::string _NODE_NOT_FOUND;
 		// In order :
 		//	- id of the node with the maximum degree
 		// 	- maximum degree of the graphe
@@ -100,13 +101,13 @@ class Graph
 		 *
 		 *	@return bool
 		 */
-		bool covered();
+		bool covered() const;
 		/**
 		 *	Tells if we have removed too many edges at once.
 		 *
 		 *	@return bool
 		 */
-		bool hollow();
+		bool hollow() const;
 };
 
 std::ostream& operator << (std::ostream&, const Graph&);
