@@ -106,7 +106,6 @@ void Graph::erase_edge(const int &i, const int &j)
 {
 	_edges[i].remove(j);
 	_edges[j].remove(i);
-	
 	--_nb_edges;
 	
 	_changed = true;
