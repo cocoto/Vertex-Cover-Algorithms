@@ -43,9 +43,14 @@ class Graph
 		//  - average degree of the graph
 		int    _id, _max, _nb_edges, _nb_nodes;
 		double _avg;
+		bool   _changed;
 		
 		// Adjacency list
 		std::map<int, std::list<int> > _edges;
+		/**
+		 *	Re-assigns the values for _id and _max, emulating the priority list.
+		 */
+		void _rebuild();
 		
 	public :
 		/**
@@ -58,6 +63,9 @@ class Graph
 		Graph(int, double);
 		
 		// - Getters
+		int       id();
+		int      max();
+		
 		int       id() const;
 		int      max() const;
 		double   avg() const;
@@ -77,10 +85,6 @@ class Graph
 		const std::list<int>* operator [] (const int) const;
 		
 		// - Methods
-		/**
-		 *	Re-assigns the values for _id and _max, emulating the priority list.
-		 */
-		void rebuild();
 		/**
 		 *	Delete edge (i,j) from the graph. Removing it from the lists of each
 		 *	of its ends, and adjusting their respective degrees.

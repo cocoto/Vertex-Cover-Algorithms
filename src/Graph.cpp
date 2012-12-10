@@ -27,7 +27,7 @@ Graph::Graph(int n, double p)
 	}
 	
 	// Create the priority list
-	rebuild();
+	_rebuild();
 	
 	_nb_nodes = n;
 	_nb_edges = m;
@@ -46,6 +46,24 @@ int Graph::id() const
 
 int Graph::max() const
 {
+	return _max;
+}
+
+int Graph::id()
+{
+	if (_changed) {
+		_rebuild();
+	}
+	
+	return _id;
+}
+
+int Graph::max()
+{
+	if (_changed) {
+		_rebuild();
+	}
+	
 	return _max;
 }
 
@@ -90,6 +108,8 @@ void Graph::erase_edge(const int &i, const int &j)
 	_edges[j].remove(i);
 	
 	--_nb_edges;
+	
+	_changed = true;
 }
 
 void Graph::erase_node(const int &i)
@@ -114,9 +134,11 @@ void Graph::erase_node(const int &i)
 	_edges.erase(i);
 	
 	--_nb_nodes;
+	
+	_changed = true;
 }
 
-void Graph::rebuild()
+void Graph::_rebuild()
 {
 	_id  = 0;
 	_max = 0;
@@ -134,6 +156,8 @@ void Graph::rebuild()
 		
 		++it;
 	}
+	
+	_changed = false;
 }
 
 bool Graph::covered() const
