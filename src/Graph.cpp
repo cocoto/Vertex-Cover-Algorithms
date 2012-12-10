@@ -1,5 +1,7 @@
 #include "Graph.h"
 
+const std::string Graph::_NODE_NOT_FOUND = "Noeud inexistant ou supprimé !\n";
+
 Graph::Graph(int n, double p)
 {
 	int i = 0, j = 0, r = 0, m = 0;
@@ -25,7 +27,7 @@ Graph::Graph(int n, double p)
 	}
 	
 	// Create the priority list
-	rebuild();
+	_rebuild();
 	
 	_nb_nodes = n;
 	_nb_edges = m;
@@ -44,6 +46,24 @@ int Graph::id() const
 
 int Graph::max() const
 {
+	return _max;
+}
+
+int Graph::id()
+{
+	if (_changed) {
+		_rebuild();
+	}
+	
+	return _id;
+}
+
+int Graph::max()
+{
+	if (_changed) {
+		_rebuild();
+	}
+	
 	return _max;
 }
 
@@ -69,7 +89,13 @@ const std::map<int, std::list<int> >* Graph::edges() const
 
 const std::list<int>* Graph::operator [] (const int i) const
 {
-	return &(_edges.find(i)->second);
+	std::map<int, std::list<int> >::const_iterator it = _edges.find(i);
+	
+	if (it == _edges.end()) {
+		throw _NODE_NOT_FOUND;
+	} else {
+		return &(it->second);	
+	}
 }
 
 /****************************************
@@ -81,23 +107,37 @@ void Graph::erase_edge(const int &i, const int &j)
 	_edges[i].remove(j);
 	_edges[j].remove(i);
 	--_nb_edges;
+	
+	_changed = true;
 }
 
 void Graph::erase_node(const int &i)
 {
+	std::map<int, std::list<int> >::const_iterator find = _edges.find(i);
+	
+	if (find == _edges.end()) {
+		throw _NODE_NOT_FOUND;
+	}
+	
 	// We remove as much edges as incident to designated node.
 	_nb_edges -= _edges[i].size();
-	_edges.erase(i);
-	std::map<int, std::list<int> >::iterator it = _edges.begin();
-
-	while (it != _edges.end()) {
-		it->second.remove(i);
+	
+	std::list<int>::iterator it = _edges[i].begin();
+	
+	while (it != _edges[i].end()) {
+		_edges[*it].remove(i);
 		
 		++it;
 	}
+	
+	_edges.erase(i);
+	
+	--_nb_nodes;
+	
+	_changed = true;
 }
 
-void Graph::rebuild()
+void Graph::_rebuild()
 {
 	_id  = 0;
 	_max = 0;
@@ -108,28 +148,30 @@ void Graph::rebuild()
 	while (it != _edges.end()) {
 		++i;
 		
-		if (it->second.size() > _max) {
+		if ((int) it->second.size() > _max) {
 			_max = it->second.size();
 			_id  = i;
 		}
 		
 		++it;
 	}
+	
+	_changed = false;
 }
 
-bool Graph::covered()
+bool Graph::covered() const
 {
 	return _nb_edges == 0;
 }
 
-bool Graph::hollow()
+bool Graph::hollow() const
 {
-	return _nd_edges < 0;
+	return _nb_edges < 0;
 }
 
 std::ostream& operator << (std::ostream &os, const Graph &g)
 {
-	std::map<int, std::list<int> >::const_iterator mit = g.edges()->begin();
+	std::map<int, std::list<int> >::const_iterator mit = g.edges()->begin();	
 	std::list<int>::const_iterator lit;
 	
 	while (mit != g.edges()->end()) {
