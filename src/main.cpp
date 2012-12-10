@@ -1,5 +1,7 @@
 #include "main.h"
-
+#include <unistd.h>
+#include "function2approx.cpp"
+#include "functionKernelVC.cpp"
 int main(int argc, char **argv)
 {
 	int c = 0, size = 0;
@@ -15,12 +17,12 @@ int main(int argc, char **argv)
 		}
 	}
 	
-	double delta = 0.0;
 	
 	// p = 3/n
 	Graph graph = Graph(size, (double) 3 / size);
 	
 	std::cout << graph;
-	
+	std::list<int> d_approx=fonction2approx(graph);
+	std::cout<<d_approx.size()<<"\n";
 	return 1;
 }
