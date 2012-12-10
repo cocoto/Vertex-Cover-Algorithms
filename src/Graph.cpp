@@ -80,7 +80,6 @@ void Graph::erase_edge(const int &i, const int &j)
 {
 	_edges[i].remove(j);
 	_edges[j].remove(i);
-	
 	--_nb_edges;
 }
 
@@ -89,9 +88,8 @@ void Graph::erase_node(const int &i)
 	// We remove as much edges as incident to designated node.
 	_nb_edges -= _edges[i].size();
 	_edges.erase(i);
-	
 	std::map<int, std::list<int> >::iterator it = _edges.begin();
-	
+
 	while (it != _edges.end()) {
 		it->second.remove(i);
 		
