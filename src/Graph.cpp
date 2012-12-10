@@ -143,14 +143,11 @@ void Graph::_rebuild()
 	_max = 0;
 	
 	std::map<int, std::list<int> >::iterator it = _edges.begin();
-	int i = 0;
 	
 	while (it != _edges.end()) {
-		++i;
-		
 		if ((int) it->second.size() > _max) {
 			_max = it->second.size();
-			_id  = i;
+			_id  = it->first;
 		}
 		
 		++it;
