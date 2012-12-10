@@ -17,12 +17,11 @@ else
 endif
 
 # all : $(EXEC)
-prog: head
-	$(CC) *.o -o bin/$@ $(FLAGS)
+prog: Graph.o src/main.cpp
+	$(CC) $^ -o bin/$@ $(FLAGS)
 
-head : src/*.cpp include/*.h
-	$(CC) -c $^ $(FLAGS)
-	
+%.o : src/%.cpp include/%.h
+	$(CC) -c $^ $(FLAGS) -o $@
 clean:
 	@ rm -f *.o
 mrproper: clean
