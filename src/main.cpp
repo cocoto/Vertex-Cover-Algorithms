@@ -20,10 +20,6 @@ int main(int argc, char **argv)
 	// p = 3/n
 	Graph graph = Graph(size, (double) 3 / size);
 	
-	while (graph.max() < 3) {
-		graph = Graph(size, (double) 3 / size);
-	}
-	
 	std::cout << graph;
 	
 	return 1;
