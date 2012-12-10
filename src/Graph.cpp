@@ -39,12 +39,12 @@ Graph::Graph(int n, double p)
 **************** Getters ****************
 ****************************************/
 
-int Graph::id() const
+int Graph::cid() const
 {
 	return _id;
 }
 
-int Graph::max() const
+int Graph::cmax() const
 {
 	return _max;
 }
@@ -196,7 +196,7 @@ std::ostream& operator << (std::ostream &os, const Graph &g)
 	
 	os  <<   "Nb. of nodes : " << g.nb_nodes()
 		<< "\tNb. of edges : " << g.nb_edges()
-		<< "\nMax. degree  : " << g.max()
+		<< "\nMax. degree  : " << g.cmax()
 		<< "\tAvg. degree  : " << g.avg()
 		<< '\n';
 		
