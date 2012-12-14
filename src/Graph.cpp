@@ -10,7 +10,7 @@ Graph::Graph(int n, double p)
 
 	srand(time(NULL));
 	
-	std::cout << "Existence rate : " << q / RAND_MAX * 100 << "%\n";
+	//std::cout << "Existence rate : " << q / RAND_MAX * 100 << "%\n";
 	
 	// Build the edges
 	for (i = 1; i <= n; i++) {

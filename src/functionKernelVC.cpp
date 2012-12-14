@@ -1,9 +1,5 @@
-#include <iostream>
-#include <list>
-#include <map>
-#include "Graph.h"
-
-bool fonctionKernelVC(Graph graphe, int k)
+#include "functionKernelVC.h"
+bool functionKernelVC(Graph graphe, int k)
 {
   std::map<int,std::list< int> >::const_iterator it_graphe=graphe.edges()->begin();
   int degre;

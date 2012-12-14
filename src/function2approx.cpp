@@ -1,9 +1,5 @@
-#include <iostream>
-#include <list>
-#include <map>
-#include "Graph.h"
-
-int fonction2approx(Graph graphe)
+#include "function2approx.h"
+int function2approx(Graph graphe)
 {
   int resultat=0;
   int sommet1,sommet2;
