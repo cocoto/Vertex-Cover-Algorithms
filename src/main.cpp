@@ -1,6 +1,4 @@
 #include "main.h"
-#include "function2approx.h"
-#include "functionKernelVC.h"
 
 void latex(
 	std::ofstream *&f, std::string title, Graph &g
@@ -23,7 +21,7 @@ int main(int argc, char **argv)
 	float p[5];
 	bool res_kernel, res_arb;
 	std::ofstream *f;
-	char* name;
+	char name[50];
 	p[3]=0.1;
 	p[4]=0.2;
 	int indice_p;
@@ -69,12 +67,16 @@ int main(int argc, char **argv)
 	      res_kernel=functionKernelVC(graph, (max+min)/2);
 	      res_arb=arb_vc(graph,(max+min)/2);
 	      
-	      if(res_arb && res_kernel)
+	      if(/*res_arb &&*/ res_kernel)
 	      {
 		max=(max+min)/2;
 	      }
 	      else
 	      {
+// 		if(res_arb!=res_kernel)
+// 		{
+// 		  std::cout<<"NON MAIL LOL !\n";
+// 		}
 		min=(max+min)/2;
 	      }
 	    }

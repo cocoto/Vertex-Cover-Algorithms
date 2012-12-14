@@ -18,6 +18,9 @@
 
 // Resolution
 #include "arb-vc.h"
+#include "function2approx.h"
+#include "functionKernelVC.h"
+#include "heuristic.h"
 
 int  main(int, char**);
 void latex(std::ofstream*&, std::string, Graph&, int, int, int, int);

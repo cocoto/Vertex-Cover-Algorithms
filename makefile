@@ -17,7 +17,7 @@ else
 endif
 
 # all : $(EXEC)
-prog: Graph.o arb-vc.o function2approx.o functionKernelVC.o src/main.cpp
+prog: Graph.o arb-vc.o function2approx.o functionKernelVC.o heuristic.o src/main.cpp
 	$(CC) $^ -o bin/$@ $(FLAGS)
 
 %.o : src/%.cpp include/%.h
