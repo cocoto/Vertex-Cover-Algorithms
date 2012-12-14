@@ -5,7 +5,7 @@
 
 bool fonctionKernelVC(Graph graphe, int k)
 {
-  std::map<int,std::list< int> >::const_iterator it_graphe;
+  std::map<int,std::list< int> >::const_iterator it_graphe=graphe.edges()->begin();
   int degre;
    while(it_graphe!=graphe.edges()->end() && k!=0 && !graphe.covered())
    {
