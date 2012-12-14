@@ -1,5 +1,20 @@
 #include "main.h"
 
+void latex(
+	std::ofstream *&f, std::string title, Graph &g
+	, int kernel, int arb, int ap2, int heur
+) {
+	*f	<< title
+		<< '&' << g.nb_edges()
+		<< '&' << g.avg()
+		<< '&' << g.max()
+		<< '&' << kernel
+		<< '&' << arb
+		<< '&' << ap2
+		<< '&' << heur
+		<< "\\\\";
+}
+
 int main(int argc, char **argv)
 {
 	int c = 0, size = 0;
@@ -14,8 +29,6 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	
-	double delta = 0.0;
 	
 	// p = 3/n
 	Graph graph = Graph(size, (double) 3 / size);
