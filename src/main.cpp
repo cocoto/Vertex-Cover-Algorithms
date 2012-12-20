@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	    res_monheuristique=heuristic(graph);
 	    //Fonction de recherche dichotomie
 	    min=res_2_approx/2+(res_2_approx%2>0)?1:0;
-	    max=res_2_approx;
+	    max=std::min(res_2_approx,res_monheuristique);
 	    while(max-min>1)
 	    {
 	     
@@ -67,16 +67,16 @@ int main(int argc, char **argv)
 	      res_kernel=functionKernelVC(graph, (max+min)/2);
 	      res_arb=arb_vc(graph,(max+min)/2);
 	      
+	      if(res_arb!=res_kernel)
+		{
+		  std::cout<<"NON MAIL LOL ! degre="<<(max+min)/2<<" kernel dit "<<res_kernel<<" alors que arb dit "<<res_arb<<" c'est quoi ce bordel !\n";
+		}
 	      if(/*res_arb &&*/ res_kernel)
 	      {
 		max=(max+min)/2;
 	      }
 	      else
 	      {
-// 		if(res_arb!=res_kernel)
-// 		{
-// 		  std::cout<<"NON MAIL LOL !\n";
-// 		}
 		min=(max+min)/2;
 	      }
 	    }
@@ -91,9 +91,9 @@ int main(int argc, char **argv)
 	   */
 	  *f<<"\\end{array}\n";
 	  f->close();
-	  
+	  delete f;
 	  if(size<100)
-	  {
+	  { 
 	    size+=10;
 	  }
 	  else if(size<500)
@@ -109,24 +109,6 @@ int main(int argc, char **argv)
 	    size+=100;
 	  }
 	}
-// 	// p = 3/n
-// 	Graph graph = Graph(size, (double) 3 / size);
-// 	
-// 	std::cout << graph;
-// 	std::list<int> d_approx=fonction2approx(graph);
-// 	std::cout<<d_approx.size()<<"\n";
-// 	std::list<int>::iterator it=d_approx.begin();
-// 	while(it!=d_approx.end())
-// 	{
-// 	  std::cout<<*it<<" ";
-// 	  it++;
-// 	}
-// 	std::cout<<"\n";
-// 	int i;
-//  	for(i=0;i<=(int)d_approx.size();i++)
-// 	{
-// 	  std::cout<<i<<" = "<<(fonctionKernelVC(graph, i)?"true":"false")<<"\n";
-// 	}
 	
 	return 1;
 }
