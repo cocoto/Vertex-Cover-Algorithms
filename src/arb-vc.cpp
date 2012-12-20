@@ -13,9 +13,9 @@ bool arb_vc(Graph g, int k)
 	}
 	
 	// Polynomial solving of lower degree graphs
-	if (g.max() < 3) {
-		return degree2_vc(g, k);
-	}
+// 	if (g.max() < 3) {
+// 		return degree2_vc(g, k);
+// 	}
 	
 	// Maximum degree node
 	int id = g.id();
@@ -24,13 +24,12 @@ bool arb_vc(Graph g, int k)
 	
 	g1.erase_node(id);
 	
-	std::list<int>::const_iterator it = g2[id]->begin();
-	int k2 = k - g2[id]->size();
+	std::list<int>::const_iterator it = g[id]->begin();
+	int k2 = k - g[id]->size();
 	
-	while (it != g2[id]->end()) {		
+	while (it != g[id]->end()) {		
 		g2.erase_node(*it);
-		
-		it = g2[id]->begin();
+		++it;
 	}
 	
 	return arb_vc(g1, k - 1) || arb_vc(g2, k2);
