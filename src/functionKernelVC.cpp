@@ -34,8 +34,8 @@ bool functionKernelVC(Graph graphe, int k)
       it_graphe++;
     }
     //std::cout<<"Fin de Kernel VC, k="<<k<<" à tester avec "<<set_edges.size()<<" noeuds\n";
-    //return functionBruteforce(k,set_edges,graphe);
-    return arb_vc(graphe,k);
+    return functionBruteforce(k,set_edges,graphe);
+    //return arb_vc(graphe,k); VERSION OPTIMISEE
   }
 }
 

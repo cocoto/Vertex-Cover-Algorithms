@@ -12,7 +12,7 @@ void latex(
 		<< '&' << arb
 		<< '&' << ap2
 		<< '&' << heur
-		<< "\\\\";
+		<< "\\\\\n";
 }
 
 int main(int argc, char **argv)
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 	  std::cout<<"Taille :"<<size<<"\n";
 	  sprintf(name,"bin/result%d.tex",size);
 	  f=new std::ofstream(name);
-	  *f<<"$$\\begin{array}{||c||ccc||cccc||}\n \\hline \\hline \\\\ \n n="<<size<<"&m&\\Delta (G)&d_M(G)& Kernel-VC & ARB-VC & 2APPROX-VC & MonHeur-VC\\\\ \\hline \\hline\n";
+	  *f<<"\\begin{tabular}{||c||ccc||cccc||}\n \\hline \\hline \n n="<<size<<"&$m$&$\\Delta (G)$&$d_M(G)$& Kernel-VC & ARB-VC & 2APPROX-VC & MonHeur-VC\\\\ \\hline \\hline\n";
 	  p[0]=3.0/size;
 	  p[1]=4.0/size;
 	  p[2]=5.0/size;
@@ -57,7 +57,8 @@ int main(int argc, char **argv)
 	    res_monheuristique=heuristic(graph);
 	    //Fonction de recherche dichotomie
 	    min=res_2_approx/2+(res_2_approx%2>0)?1:0;
-	    max=std::min(res_2_approx,res_monheuristique);
+	    //max=std::min(res_2_approx,res_monheuristique);  VERSION OPTIMISEE
+	    max=res_2_approx;
 	    while(max-min>1)
 	    {
 	     
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
 	  /*
 	   * Cloture fichier
 	   */
-	  *f<<"\\end{array}\n";
+	  *f<<"\\hline \\end{tabular}\n";
 	  f->close();
 	  delete f;
 	  if(size<100)
