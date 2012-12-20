@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <list>
+#include <algorithm>
 
 // C lib
 #include <iostream>
