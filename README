@@ -1,0 +1,49 @@
+##   README    ##
+
+Readme pour le projet Tonneau-Mahéo de résolution du problème de Vertex Cover par :
+	- Méthode d'approximation de ratio 2.
+	- Heuristique approchée.
+	- Arbre de recherche borné.
+	- Kernelization.
+
+## Utilisation ##
+
+bin/prog
+
+## Compilation ##
+
+Soit par :
+make
+
+Soit :
+g++ -Iinclude/ src/Graph.cpp -c -W -Wall -ansi -pedantic -pipe -lpthread -O3
+g++ -Iinclude/ src/arb-vc.cpp -c -W -Wall -ansi -pedantic -pipe -lpthread -O3
+g++ -Iinclude/ src/function2approx.cpp -c -W -Wall -ansi -pedantic -pipe -lpthread -O3
+g++ -Iinclude/ src/functionKernelVC.cpp -c -W -Wall -ansi -pedantic -pipe -lpthread -O3
+g++ -Iinclude/ src/heuristic.cpp -c -W -Wall -ansi -pedantic -pipe -lpthread -O3
+g++ -Iinclude/ Graph.o arb-vc.o function2approx.o functionKernelVC.o heuristic.o src/main.cpp -o bin/prog -W -Wall -ansi -pedantic -pipe -lpthread -O3
+
+Possibilité d'activer le debug en changeant le paramètre OPTI du makefile.
+
+##   Contenu   ##
+
+src/
+	Sources du code. Chaque fonction a son fichier propre, et le main().
+
+include/
+	Headers du code.
+
+bin/
+	L'exécutable est compilé dans ce dossier, le fichiers de résultats y sont créés.
+
+##  Commandes  ##
+
+make clean
+	Nettoie les fichiers objets générés lors de la compilation.
+
+make mrproper
+	Effectue le make clean et supprime l'exécutable.
+
+## Dépendances ##
+
+Librairies standards C, C++. 
