@@ -1,5 +1,10 @@
 #include "main.h"
 #define TEMPSMAX 180
+/*
+ * Fonction remplissant une ligne du tableau LaTeX dans le flux f
+ * Si une valeur est égale à -X, alors la case correspondante est notée "nrp"
+ */
+
 void latex(
 	std::ofstream *&f, std::string title, Graph &g
 	, int kernel, int arb, int ap2, int heur
@@ -34,16 +39,27 @@ void latex(
 	}
 	if(heur<0)
 	{
+		*f<<"& nrp";
+	}
+	else
+	{
 		*f<< '&' << heur;
 	}
 	
 	*f<< "\\\\\n";
 }
 
-static bool res_kernel, timeout_kernel, res_arb, timeout_arb;
-static int k, res_2_approx,res_monheuristique;
-static pthread_mutex_t mutex_chrono = PTHREAD_MUTEX_INITIALIZER;
+/*
+ * Variables statics du problèmes
+ * Ces variables sont utilisées par les threads, et n'occasionnent pas de conflits
+ */
+static bool res_kernel, timeout_kernel, res_arb, timeout_arb; //Résultats des algorithmes et notification de timeout
+static int k, res_2_approx,res_monheuristique;	//Résultats des heuristiques
+static pthread_mutex_t mutex_chrono = PTHREAD_MUTEX_INITIALIZER; //Mutex empéchant la destruction du chrono lorsque celui-ci est dépassé
 
+/*
+ * Fonction Thread de l'algorithme de kernelisation
+ */
 void* exec_kernel(void* data)
 {
 	Graph graph=*(Graph*)data;
@@ -52,6 +68,9 @@ void* exec_kernel(void* data)
 	return NULL;
 }
 
+/*
+ * Fonction Thread de l'algorithme d'arbre binaire  de recherche borné
+ */
 void* exec_arb(void* data)
 {
 	//sleep(10);
@@ -61,6 +80,9 @@ void* exec_arb(void* data)
 	return NULL;
 }
 
+/*
+ * Fonction Thread de l'algorithme de 2-Approximation
+ */
 void* exec_2approx(void* data)
 {
 	Graph graph=*(Graph*)data;
@@ -68,6 +90,10 @@ void* exec_2approx(void* data)
 	res_2_approx=resultat;
 	return NULL;
 }
+
+/*
+ * Fonction Thread de l'algorithme Mon-Heuristique
+ */
 void* exec_monheur(void* data)
 {
 	Graph graph=*(Graph*)data;
@@ -76,22 +102,29 @@ void* exec_monheur(void* data)
 	return NULL;
 }
 
+/*
+ * Algorihtme de timout des fonctions 2-Approx et Mon-Heuristique
+ * 
+ */
 void* stop2(void* data)
 {
-	int fin_2approx,fin_monheur;
+	int fin_2approx,fin_monheur; //Entiers informant la bonne fermeture des threads
 	pthread_t* tab_thread=(pthread_t*)data;
 	
 	
 	//On attend X secondes
 	sleep(TEMPSMAX);
-	pthread_mutex_lock (&mutex_chrono);
+	
+	
+	pthread_mutex_lock (&mutex_chrono); //Mutex de sécurité
+	
 	std::cout<<"TEMPS MAX DEPASSE\n";
 	//On termine les threads
 	fin_2approx=pthread_cancel(tab_thread[0]);
 	fin_monheur=pthread_cancel(tab_thread[1]);
 	
 	//On met à jour les données
-	if(fin_2approx==0)
+	if(fin_2approx==0) //fin_X est égal à zéro uniquement si le chronomètre est à l'origine de la terminaison du thread
 	{
 		std::cout<<"DEPASSEMENT 2Approx\n";
 		res_2_approx=-1;
@@ -105,7 +138,10 @@ void* stop2(void* data)
 	return NULL;
 }
 
-
+/*
+ * Algorithme de timeout des fonctions Arb-VC et Kernel-VC
+ * CF description ci-dessus
+ */
 void* stop(void* data)
 {
 	int fin_arb,fin_kernel;
@@ -135,6 +171,9 @@ void* stop(void* data)
 	return NULL;
 }
 
+/*
+ * Fonction d'affichage de l'heure courante
+ */
 void print_date(const time_t &now)
 {
 	struct tm *timelocal=localtime(&now);
@@ -143,37 +182,38 @@ void print_date(const time_t &now)
 	std::cout<<result;
 }
 
+
+
 int main(int argc, char **argv)
 {
-	int c = 0, size = 0,min,max;
-	float p[5];
+	(void) argv;
+	(void) argc;
+	int size = 0,min,max;
+	
+	float p[5]; //Tableau des probabilités
+	/*
+	 * Activation des variables statiques
+	 */
 	res_arb=false;
 	timeout_kernel=false;
 	timeout_arb=false;
 	res_kernel=false;
-	int val_kernel,val_arb;
-	std::ofstream *f;
-	char name[50];
+	
+	
+	int val_kernel,val_arb; //Valeurs finales (optimales) des kernel et arb
+	std::ofstream *f; //Fichier de sortie LaTeX
+	char name[50];	  //Nom des lignes du tableau (5/n...0.2)
+	int indice_p;
+	pthread_t exec[2]; //On créé un tableau de 2 threads (kernel,arb) ou (2-approx,monheuristique)
+	pthread_t timer; //On créer un thread de timeout
+	time_t debut; //Temps actuel (heure)
+	
 	p[3]=0.1;
 	p[4]=0.2;
-	int indice_p;
-	pthread_t exec[2]; //On créé un tableau de 2 threads (kernel et arb)
-	pthread_t timer; //On créer un thread de timeout
 	std::string titres[5]={"3/n","4/n","5/n","0.1","0.2"};
-	time_t debut;
-	if (argc < 2) {
-		std::cout << "Ce programme s'appelle ./prog -n <taille>" << std::endl;
-		return 0;
-	} else {
-		while ((c = getopt(argc, argv, "n:")) != -1) {
-			if (c == 'n') {
-				size = atoi(optarg);
-		}
-	}
-	}
 	
-	size=10;
-	while(size<=1000)
+	size=10; //On commence les tableaux à n=10
+	while(size<=1000) //Jusqu'à au maximum n=1000
 	{
 		/*
 		 * Mise en place du début du tableau LaTeX
@@ -277,12 +317,6 @@ int main(int argc, char **argv)
  					pthread_cancel(timer);
  					pthread_mutex_unlock (&mutex_chrono);
 
-					
-					
-					if(res_arb!=res_kernel)
-					{
-						std::cout<<"NON MAIS LOL ! degre="<<(max+min)/2<<" kernel dit "<<res_kernel<<" alors que arb dit "<<res_arb<<" c'est quoi ce bordel !\n";
-					}
 					
 					/*
 					 * Mise à jour des bornes de la dichotomie
