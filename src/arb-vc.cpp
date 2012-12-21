@@ -2,6 +2,7 @@
 
 bool arb_vc(Graph g, int k)
 {
+	pthread_testcancel();
 	// Graph is covered without overflow in edge removal
 	if (g.covered() && k >= 0) {
 		return true;

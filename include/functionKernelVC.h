@@ -1,5 +1,6 @@
 #ifndef FUNCTIONKERNELVC
 #define FUNCTIONKERNELVC
+#include <pthread.h>
 #include <list>
 #include <map>
 #include <set>

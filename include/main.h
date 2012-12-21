@@ -12,9 +12,9 @@
 #include <fstream>
 #include <cstring>
 #include <unistd.h>
+#include <pthread.h>
 
 // Classes
-#include "Couple.h"
 #include "Graph.h"
 
 // Resolution
@@ -25,5 +25,12 @@
 
 int  main(int, char**);
 void latex(std::ofstream*&, std::string, Graph&, int, int, int, int);
+void* exec_kernel(void* data);
+void* exec_arb(void* data);
+void* exec_2approx(void* data);
+void* exec_monheur(void* data);
+void* stop2(void* data);
+void* stop(void* data);
+void print_date(const time_t &now);
 
 #endif
