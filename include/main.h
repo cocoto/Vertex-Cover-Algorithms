@@ -12,6 +12,7 @@
 #include <fstream>
 #include <cstring>
 #include <unistd.h>
+#include <pthread.h>
 
 // Classes
 #include "Couple.h"

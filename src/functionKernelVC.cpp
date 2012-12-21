@@ -34,13 +34,14 @@ bool functionKernelVC(Graph graphe, int k)
       it_graphe++;
     }
     //std::cout<<"Fin de Kernel VC, k="<<k<<" à tester avec "<<set_edges.size()<<" noeuds\n";
-    return functionBruteforce(k,set_edges,graphe);
-    //return arb_vc(graphe,k); VERSION OPTIMISEE
+    //return functionBruteforce(k,set_edges,graphe);
+    return arb_vc(graphe,k); //VERSION OPTIMISEE
   }
 }
 
 bool functionBruteforce(int k, std::set<int> nodes, Graph graphe)
 {
+  pthread_testcancel();
   std::set<int> nodes2=nodes;
   std::set<int>::iterator it;
   if(k==0)

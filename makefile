@@ -3,7 +3,7 @@ TYPE=opt
 #	debug / opt
 	
 CC= g++ -Iinclude/
-CFLAGS = -W -Wall -ansi -pedantic -pipe
+CFLAGS = -W -Wall -ansi -pedantic -pipe -lpthread
 OPT= -O3
 EXEC= prog
 ifeq ($(TYPE),debug)
